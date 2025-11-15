@@ -1,0 +1,1335 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "serviceAccount",
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "id": "6eafbda6-2461-446d-bec0-8df0543238c5",
+      "name": "Gmail Trigger",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "position": [
+        -288,
+        1056
+      ],
+      "typeVersion": 1.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the headers object from the JSON\nconst headers = $('Gmail - Set Headers').item.json.headers;\n\n// Find all keys that start with \"received\" (case-insensitive)\nconst receivedHeaders = Object.entries(headers)\n    .filter(([key, value]) => key.toLowerCase() === 'received')\n    .map(([key, value]) => ({ key, value }));\n\n// Return each header as an object\nreturn receivedHeaders.map(header => ({ json: header }));\n"
+      },
+      "id": "1a1326d2-d5f2-4d64-943e-f31e8c815b87",
+      "name": "Gmail - Extract Received Headers",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -80,
+        608
+      ],
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5f740d1f-de62-4fe0-aa20-625063344c07",
+              "name": "extractedfromip",
+              "type": "string",
+              "value": "={{ $json.value.replace(/\\b(127\\.(?:\\d{1,3}\\.){2}\\d{1,3})|(10\\.(?:\\d{1,3}\\.){2}\\d{1,3})|(172\\.(?:1[6-9]|2[0-9]|3[0-1])\\.\\d{1,3}\\.\\d{1,3})|(192\\.168\\.\\d{1,3}\\.\\d{1,3})\\b/g, \"\").match(/(\\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])(\\.(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])){3}))|:)))(%.+)?\\s*)|(\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)[.]){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b)/)[0] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6d0e924f-cd19-42d1-8b60-e6f5f8d2c5e7",
+      "name": "Gmail - Extract Original From IP",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -80,
+        160
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "1c27e7ba-d243-4673-b1cc-608c35951168",
+              "operator": {
+                "type": "boolean",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.extractedfromip?.toBoolean() }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "772ca918-5310-4003-ace1-bbba0424138f",
+      "name": "Gmail - Original IP Found?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -80,
+        0
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "url": "=https://ipqualityscore.com/api/json/ip/Mlg6aZdzI1mVehUD3Z5Ak5Vl4yNN7P8v/{{ $('Gmail - Extract Original From IP').item.json.extractedfromip }}?strictness=1&allow_public_access_points=true&lighter_penalties=true",
+        "options": {}
+      },
+      "id": "10c1a29b-53c5-4e32-89e7-95a7f0bb5f44",
+      "name": "Gmail - Query IP Quality Score API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        80,
+        -112
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=http://ip-api.com/json/{{ $('Gmail - Extract Original From IP').item.json.extractedfromip }}",
+        "options": {}
+      },
+      "id": "76569b4c-bac7-43b2-8cca-ab2fdbcb600d",
+      "name": "Gmail - Query IP API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        304,
+        -112
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ead2b640-ad80-4189-a692-ae454723fd85",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ Object.entries($('Gmail - Set Headers').item.json.headers)\n    .filter(([key, value]) => key.toLowerCase() === 'authentication-results')\n    .map(([key, value]) => ({ key, value })) }}",
+              "rightValue": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "16e14c2f-9020-4f50-a164-1d2b860fc3d2",
+      "name": "Gmail - Authentication-Results Header?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        448,
+        16
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a38ebc9b-f896-4432-81fb-4f3db98f3409",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ Object.entries($('Gmail - Set Headers').item.json.headers)\n    .filter(([key, value]) => key.toLowerCase() === 'received-spf')\n    .map(([key, value]) => ({ key, value })) }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "bdca1c9e-7400-42b0-bed9-b008f74efede",
+      "name": "Gmail - Received-SPF Header?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        208,
+        400
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the headers object from the JSON\nconst headers = $('Gmail - Set Headers').item.json.headers;\n\n// Find all keys that start with \"received\" (case-insensitive)\nconst receivedHeaders = Object.entries(headers)\n    .filter(([key, value]) => key.toLowerCase() === 'authentication-results')\n    .map(([key, value]) => ({ key, value }));\n\n// Return each header as an object\nreturn receivedHeaders.map(header => ({ json: header }));\n"
+      },
+      "id": "b626bdde-39ca-4d85-b0c9-723892e1cc3a",
+      "name": "Gmail - Extract Authentication-Results Header",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        704,
+        0
+      ],
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the headers object from the JSON\nconst headers = $('Gmail - Set Headers').item.json.headers;\n\n// Find all keys that start with \"received\" (case-insensitive)\nconst receivedHeaders = Object.entries(headers)\n    .filter(([key, value]) => key.toLowerCase() === 'received-spf')\n    .map(([key, value]) => ({ key, value }));\n\n// Return each header as an object\nreturn receivedHeaders.map(header => ({ json: header }));\n"
+      },
+      "id": "19ee3d17-d146-4e95-95c7-8bfc048f517c",
+      "name": "Gmail - Extract Received-SPF Header",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        384,
+        240
+      ],
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd0b3f49-fe38-4686-a1f5-bc03a145adef",
+              "name": "spfvalue",
+              "type": "string",
+              "value": "={{ $json.value.toLowerCase().includes('spf=pass') ? \"pass\" : $json.value.toLowerCase().includes('spf=fail') ? \"fail\" : $json.value.toLowerCase().includes('spf=neutral') ? \"neutral\" : \"unknown\" }}"
+            },
+            {
+              "id": "6aa90f4d-773e-475f-8cbc-fe5c4fe93653",
+              "name": "dkimvalue",
+              "type": "string",
+              "value": "={{ $json.value.toLowerCase().includes('dkim=pass') ? \"pass\" : $json.value.toLowerCase().includes('dkim=fail') ? \"fail\" : $json.value.toLowerCase().includes('dkim=temperror') ? \"error\" : \"unknown\" }}"
+            },
+            {
+              "id": "d3b7b0c1-0680-4cb9-b376-d365e5602a29",
+              "name": "dmarcvalue",
+              "type": "string",
+              "value": "={{ $json.value.toLowerCase().includes('dmarc=pass') ? \"pass\" : $json.value.toLowerCase().includes('dmarc=fail') ? \"fail\" : \"unknown\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c68a0744-d9d8-42ef-bc2a-44f82835518a",
+      "name": "Gmail - Determine Auth Values",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        960,
+        0
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "179c48eb-97e5-48ab-82b8-ef4269f11366",
+              "name": "spfvalue",
+              "type": "string",
+              "value": "={{ $json.data.last().value.toLowerCase().includes('fail') ? \"fail\" : $json.data.last().value.toLowerCase().includes('pass') ? \"pass\" : \"unknown\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f5e6cc21-4be4-4b9c-8490-6b308c023d3f",
+      "name": "Gmail - Set SPF Value",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        240
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3158bf-3d91-4a61-a58c-c151362e52d7",
+              "name": "spfvalue",
+              "type": "string",
+              "value": "not found"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ed6a1c32-c096-43e5-8d26-70e30896f08f",
+      "name": "Gmail - No SPF Found",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        416
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": []
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "82ea5ff2-8b0c-40b4-a707-08f4efd93ab0",
+      "name": "Gmail - Format Output",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1440,
+        0
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3158bf-3d91-4a61-a58c-c151362e52d7",
+              "name": "dkimvalue",
+              "type": "string",
+              "value": "=found"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "78d4c419-ec3b-4b2b-b2e9-be5c5b7c4dab",
+      "name": "Gmail - DKIM Signature Found",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        560
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a38ebc9b-f896-4432-81fb-4f3db98f3409",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ Object.entries($('Gmail - Set Headers').item.json.headers)\n    .filter(([key, value]) => key.toLowerCase() === 'dkim-signature')\n    .map(([key, value]) => ({ key, value })) }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7f498d7-ce13-4063-8238-d2bafb2dcf7a",
+      "name": "Gmail - DKIM-Signature Header?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        208,
+        736
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3158bf-3d91-4a61-a58c-c151362e52d7",
+              "name": "dkimvalue",
+              "type": "string",
+              "value": "not found"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "053de971-05ad-4fbf-a4e5-39d69c344bfe",
+      "name": "Gmail - No DKIM Signature Found",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        752
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "179c48eb-97e5-48ab-82b8-ef4269f11366",
+              "name": "spfvalue",
+              "type": "string",
+              "value": "={{ $json.value.toLowerCase().includes('pass') ? \"pass\" : $json.value.toLowerCase().includes('fail') ? \"fail\" : \"unknown\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ab043743-05eb-44c9-900a-6255d8cf279b",
+      "name": "Gmail - Set DMARC Value",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        944
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract the headers object from the JSON\nconst headers = $('Gmail - Set Headers').item.json.headers;\n\n// Find all keys that start with \"received\" (case-insensitive)\nconst receivedHeaders = Object.entries(headers)\n    .filter(([key, value]) => key.toLowerCase() === 'dmarc')\n    .map(([key, value]) => ({ key, value }));\n\n// Return each header as an object\nreturn receivedHeaders.map(header => ({ json: header }));\n"
+      },
+      "id": "57fe1543-5139-4e10-8b4c-f28e93727ba7",
+      "name": "Gmail - Extract DMARC Header",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        368,
+        944
+      ],
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a38ebc9b-f896-4432-81fb-4f3db98f3409",
+              "operator": {
+                "type": "array",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ Object.entries($('Gmail - Set Headers').item.json.headers)\n    .filter(([key, value]) => key.toLowerCase() === 'dmarc')\n    .map(([key, value]) => ({ key, value })) }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e91ae9d-1c4f-4755-a0be-cf8493ceb4ae",
+      "name": "Gmail - DMARC Header?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        208,
+        1120
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae3158bf-3d91-4a61-a58c-c151362e52d7",
+              "name": "dmarcvalue",
+              "type": "string",
+              "value": "=not found"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "377c46ef-ba17-4122-90a6-b984489bad8d",
+      "name": "Gmail - No DMARC Header",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        992,
+        1136
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "851a621a-509a-4a10-818c-a885a053cbf6",
+              "name": "headers",
+              "type": "object",
+              "value": "={{ $json.headers }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "40c95249-c34b-4b7c-abc7-3b4677d265be",
+      "name": "Set Gmail Headers Here",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -80,
+        1056
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f466a9d-e8a1-4095-918c-89fd8e3dae57",
+              "name": "spf",
+              "type": "string",
+              "value": "={{ $json.data[0].spfvalue }}"
+            },
+            {
+              "id": "797b0e35-9a2e-4261-8741-a8d636e0d1ae",
+              "name": "dkim",
+              "type": "string",
+              "value": "={{ $json.data[1].dkimvalue }}"
+            },
+            {
+              "id": "8b6f9dda-081d-45b6-98a9-04a96642800b",
+              "name": "dmarc",
+              "type": "string",
+              "value": "={{ $json.data[2].dmarcvalue }}"
+            },
+            {
+              "id": "6d24a794-0d06-4f12-8bfb-cc3c71720a1b",
+              "name": "initialIP",
+              "type": "string",
+              "value": "={{ $('Gmail - Extract Original From IP').item.json.extractedfromip || 'Originating IP Not Found'}}"
+            },
+            {
+              "id": "e9ec6f54-0ef7-451b-bbeb-8bb9291e4bcd",
+              "name": "organization",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.org || \"No Organization Found\" }}"
+            },
+            {
+              "id": "719b8414-72e1-4916-855b-00abdfc8e776",
+              "name": "country",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.country || \"No Country Found\" }}"
+            },
+            {
+              "id": "ab0dc08c-ba54-4e2c-b4df-9f23d36cb350",
+              "name": "city",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.city || \"No City Found\" }}"
+            },
+            {
+              "id": "f8214eea-dfb6-4fe1-8e45-e0b8d3d44ee3",
+              "name": "recentSpamActivity",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP Quality Score API').item.json.fraud_score>=85 ? \"Identified spam in the last 48 hours\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=75 ? \"Identified spam in the last month\" : \"Not associated with recent spam\" }}"
+            },
+            {
+              "id": "fe3488b2-ad00-45ad-b947-ca2dc4242363",
+              "name": "ipSenderReputation",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP Quality Score API').item.json.fraud_score>=85 ? \"Bad\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=75 ? \"Poor\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=50 ? \"Suspicious\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=11 ? \"OK\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score<11 ? \"Good\" : \"Unknown\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "90a33864-8f4f-4e93-b318-7f5ce653fd16",
+      "name": "Format Individual Auth Outputs1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1456,
+        208
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f466a9d-e8a1-4095-918c-89fd8e3dae57",
+              "name": "spf",
+              "type": "string",
+              "value": "={{ $json.spfvalue }}"
+            },
+            {
+              "id": "797b0e35-9a2e-4261-8741-a8d636e0d1ae",
+              "name": "dkim",
+              "type": "string",
+              "value": "={{ $json.dkimvalue }}"
+            },
+            {
+              "id": "8b6f9dda-081d-45b6-98a9-04a96642800b",
+              "name": "dmarc",
+              "type": "string",
+              "value": "={{ $json.dmarcvalue }}"
+            },
+            {
+              "id": "6d24a794-0d06-4f12-8bfb-cc3c71720a1b",
+              "name": "initialIP",
+              "type": "string",
+              "value": "={{ $('Gmail - Extract Original From IP').item.json.extractedfromip || 'Originating IP Not Found'}}"
+            },
+            {
+              "id": "e9ec6f54-0ef7-451b-bbeb-8bb9291e4bcd",
+              "name": "organization",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.org || \"No Organization Found\" }}"
+            },
+            {
+              "id": "ba720521-9c2d-4906-8567-714e411f1663",
+              "name": "country",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.country || \"No Country Found\" }}"
+            },
+            {
+              "id": "2d53a2b1-2600-4fe3-8273-8a54db4e5b87",
+              "name": "city",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP API').item.json.city || \"No City Found\" }}"
+            },
+            {
+              "id": "84158095-89e2-48f6-9f78-2f9e0f71fcc9",
+              "name": "recentSpamActivity",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP Quality Score API').item.json.fraud_score>=85 ? \"Identified spam in the last 48 hours\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=75 ? \"Identified spam in the last month\" : \"Not associated with recent spam\" }}"
+            },
+            {
+              "id": "9907705d-5f70-4cc7-bac0-0411f4b4ea37",
+              "name": "ipSenderReputation",
+              "type": "string",
+              "value": "={{ $('Gmail - Query IP Quality Score API').item.json.fraud_score>=85 ? \"Bad\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=75 ? \"Poor\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=50 ? \"Suspicious\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score>=11 ? \"OK\" : $('Gmail - Query IP Quality Score API').item.json.fraud_score<11 ? \"Good\" : \"Unknown\"}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a0065207-04f4-41c1-bede-46c23159fec4",
+      "name": "Format Combined Auth Output1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1232,
+        0
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "keep": "lastItems"
+      },
+      "id": "ebd6ad3e-b799-402a-8d24-94c893a47bf8",
+      "name": "Gmail - Remove Extra Received Headers",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        -80,
+        384
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "numberInputs": 3
+      },
+      "id": "0ef22302-d19b-49bd-a6ea-23ff2218b50a",
+      "name": "Gmail - Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1232,
+        176
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "ec717b94-029b-477b-8e60-073a87a7d6cb",
+      "name": "Gmail - Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        1264,
+        416
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "e1f27b4d-6b66-4a0d-86af-a13a612e7bc3",
+      "name": "Gmail - Set Headers",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -80,
+        832
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "3ed1ff3b-415b-41f9-8c1f-2ec03ce248a6",
+      "name": "Aggregate Received-SPF Headers1",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        768,
+        240
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "660b4c02-d098-496d-a34f-57c5ac5b8998",
+      "name": "Skip IP Check",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        192,
+        16
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "email IP",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "reciever's ID",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1984,
+        0
+      ],
+      "id": "c89ed2ee-e2eb-46e1-8905-8c9dcc6b503f",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "hGFyMSPqN29zFH0k",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1680,
+        0
+      ],
+      "id": "7c7f59ba-179e-462e-9cbc-579c5d526b2a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        224
+      ],
+      "id": "b7e52e29-9206-46ea-a820-4d7f7c740f1d",
+      "name": "Google Gemini Chat Model"
+    },
+    {
+      "parameters": {
+        "databaseName": "Email_IP's"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryMongoDbChat",
+      "typeVersion": 1,
+      "position": [
+        1776,
+        320
+      ],
+      "id": "19342249-3e2b-4e5d-9ace-1094cf0c4074",
+      "name": "MongoDB Chat Memory"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1824,
+        208
+      ],
+      "id": "2d558d7e-cdce-4644-baff-79cb3a012d39",
+      "name": "Call n8n Workflow Tool"
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "198e7323c3c933f1",
+          "threadId": "198e7323c3c933f1",
+          "labelIds": [
+            "UNREAD",
+            "IMPORTANT",
+            "CATEGORY_PERSONAL",
+            "INBOX"
+          ],
+          "sizeEstimate": 45369,
+          "headers": {
+            "delivered-to": "Delivered-To: oswalswayam@gmail.com",
+            "received": "Received: from mail-sor-f41.google.com (mail-sor-f41.google.com. [209.85.220.41])\r\n        by mx.google.com with SMTPS id 38308e7fff4ca-3366ab018fcsor12145451fa.2.2025.08.26.09.24.46\r\n        for <oswalswayam@gmail.com>\r\n        (Google Transport Security);\r\n        Tue, 26 Aug 2025 09:24:46 -0700 (PDT)",
+            "x-received": "X-Received: by 2002:a05:651c:210c:b0:336:7a34:696f with SMTP id\r\n 38308e7fff4ca-3367a346e3dmr19613591fa.30.1756225484985; Tue, 26 Aug 2025\r\n 09:24:44 -0700 (PDT)",
+            "arc-seal": "ARC-Seal: i=1; a=rsa-sha256; t=1756225486; cv=none;\r\n        d=google.com; s=arc-20240605;\r\n        b=QU/90EWOt053hd8997BULKFewgEajVDeQYCZdMQz3gGVsmYUgnH6+I3+gEukDMNXd5\r\n         Ypxqo2eMvdEiS7bM0kis99GeYqCZgYiiOF5Pjyas+2NHTN7y77mgwIJmUcS8qX3Pn90a\r\n         +uAZw7FuS2UCb1xTT50o3U5XmEkz6/WjUtiCDy9sYxVqE4MS6WNjRDnKA7oC8ae/0L+X\r\n         otxMr0SmVBDwUco9C+eM+KWuFPJhr9qlIA+o3nf75TOt7/HZkyJDMN8XzBw5BbPrb6oH\r\n         tS4eRY+UjsDqIDsNdHDxQ4ERnLo5LCbRzKy/gdFw/Y4RSYngSkvDw74TyCfMHMqOoK94\r\n         eMyQ==",
+            "arc-message-signature": "ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;\r\n        h=to:subject:message-id:date:from:in-reply-to:references:mime-version\r\n         :dkim-signature;\r\n        bh=UhZsnC7mny44ydGkwFVuCIpRttB+OKxKpL4UZEh1OWs=;\r\n        fh=+HgU4esXmxY3KZ1Y6uS6LIgvF+6dAbc9TpywFrhQak4=;\r\n        b=KBfalhDski/+FP2UfIc3hEbYFImZzKvlG+yG2WoUUcHQlXXXgYKtWAfL/4Zya/SjNA\r\n         SKFQ7gOdKBtM0S7EbUUBfoD6CgPGQgVKm83m2iGQorxm768qeBsZigwTvFsm7Qrht6ob\r\n         99pVnR7ENHrqHa3KMwxH1vhs0d+KDN55PRyuEIHioD5yJ3cdWpH9mb5VNdqZJQ0tULra\r\n         Cm4Gf4j5HIIeYcbyIzIJeYp3AWCkFp/CIGXfBqwK2dtPEwxY4/X4tER1m4s07zSk2+qL\r\n         DmjOEBl+uBaSrldddHOm5S8VqWVoEP2F5qyY6TwcXqxG2avOwuIz3zUj+ioKVeZU5t5d\r\n         JOOg==;\r\n        dara=google.com",
+            "arc-authentication-results": "ARC-Authentication-Results: i=1; mx.google.com;\r\n       dkim=pass header.i=@gmail.com header.s=20230601 header.b=Swue4NyE;\r\n       spf=pass (google.com: domain of swayamofoswal@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=swayamofoswal@gmail.com;\r\n       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;\r\n       dara=pass header.i=@gmail.com",
+            "return-path": "Return-Path: <swayamofoswal@gmail.com>",
+            "received-spf": "Received-SPF: pass (google.com: domain of swayamofoswal@gmail.com designates 209.85.220.41 as permitted sender) client-ip=209.85.220.41;",
+            "authentication-results": "Authentication-Results: mx.google.com;\r\n       dkim=pass header.i=@gmail.com header.s=20230601 header.b=Swue4NyE;\r\n       spf=pass (google.com: domain of swayamofoswal@gmail.com designates 209.85.220.41 as permitted sender) smtp.mailfrom=swayamofoswal@gmail.com;\r\n       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=gmail.com;\r\n       dara=pass header.i=@gmail.com",
+            "dkim-signature": "DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=gmail.com; s=20230601; t=1756225485; x=1756830285; dara=google.com;\r\n        h=to:subject:message-id:date:from:in-reply-to:references:mime-version\r\n         :from:to:cc:subject:date:message-id:reply-to;\r\n        bh=UhZsnC7mny44ydGkwFVuCIpRttB+OKxKpL4UZEh1OWs=;\r\n        b=Swue4NyEMUr1UlJ2O0r6PGji798iQ821Te6xWADlDJXXL3VmDeXSEIAeIZqmiivk1/\r\n         qw1F/NVth00SLaiRQiUfMdW/6g0Pd7GKuRetDUQ2BqiA8lUTEC+QFlquo1rWQK/xN7p5\r\n         fYtScWo9aiHW/I/syQJGvL3fLN4qrTKcpM0BkrnasL+tZcDZPidajMS6vmplL4yfOAHo\r\n         8qP3IFvINfSB1W9H8jUTbLb9rMH7vtb5xoAS0CP3TvCvDRNKfkKdlN87qb0q+AO+5om6\r\n         woAhLDehiLx3qx62wIcJJkIP+9/EEUMFs5J4nxmPhNLvsrpIo8SssW2R5bw7njMs9V9s\r\n         9KDg==",
+            "x-google-dkim-signature": "X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;\r\n        d=1e100.net; s=20230601; t=1756225485; x=1756830285;\r\n        h=to:subject:message-id:date:from:in-reply-to:references:mime-version\r\n         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;\r\n        bh=UhZsnC7mny44ydGkwFVuCIpRttB+OKxKpL4UZEh1OWs=;\r\n        b=Y5FiDAyw8c45ws8TmL6zf0o6wsMItNSdU0t9QynA0xsmw04gi5k53Mq6Xj1egYPlfR\r\n         sIvKteYFezYdg4rEHQDZVjaBu7HJexncb41ZEOLPcbx4Mu4KuK5+LymmjV4kyyEA3pdx\r\n         Og0HrANvxdn0MJYx0cTEGEUVlZ9Owz1iw4ZmI6/UIWOlqU0mTkbm6p4mkLZ2f2sSGMQe\r\n         9RLjAgWrxdkttHj02mtpvDQRmheuZurNbnVIYtA/muo63lWO7I3rm1me/0PjWX/Vggur\r\n         hcJXHwdU/8D+tN6EEDykcMOVDbaoBDqgkYc6+LLpnj8OxSlZqxUrY5NkXxJm74fPi0Kn\r\n         qRSQ==",
+            "x-gm-message-state": "X-Gm-Message-State: AOJu0YzXtn4oz7xURvugH6Z1JeTLF8vj8M5MBYpasnxMuPJ9AksHjSDk\r\n\tpCK2g1mwxYuj2+InvmwqvtaQKAJaNv+EnnPnb0xIRKge7o6anGo42PTO4wE9KwGylQPK7nRKf8a\r\n\t635gfGf+/wfr/T/TOCg4rWLlbzZU9XBz+lw==",
+            "x-gm-gg": "X-Gm-Gg: ASbGncub+8OxqIUWje59LXamI4ffVl1AaQh+Ff/9fWSG5wZssVV4j4oYJ0Zz5LBECV6\r\n\tm7TkiwVO+X4vZtwdWZkiUNQobY1WwMMoBW2uJnlCWRxS3emm5qE7nL5W4Fa37FSJQ7QZcST+T7O\r\n\ti7O+5knrIVGVmqAUK859kFngMvaLNrlQFaZJoAAuBTpQIFofp2pgOn47MjK1PvqRXL5yDHsu3Hk\r\n\tB0JgktRGyi3Jy/oi3qdR33v",
+            "x-google-smtp-source": "X-Google-Smtp-Source: AGHT+IFrEoB0LL1KMiyWlhQDG9RKfDsqyPQ4knGtU5cYvtjKwQ85ulSTz55HOrK9wMOuRJan++WinDPFn30CKqcs7r4=",
+            "mime-version": "MIME-Version: 1.0",
+            "references": "References: <7f193f298d78e3f46c53c9813b9dc981d63cf191-20364530-111709449@google.com>",
+            "in-reply-to": "In-Reply-To: <7f193f298d78e3f46c53c9813b9dc981d63cf191-20364530-111709449@google.com>",
+            "from": "From: Swayam Oswal <swayamofoswal@gmail.com>",
+            "date": "Date: Tue, 26 Aug 2025 21:54:31 +0530",
+            "x-gm-features": "X-Gm-Features: Ac12FXzgXtj38DOTcMyTCHOBBC03a9qoz45CQk_rjHIosUo1A_gm1NC96D2AsyY",
+            "message-id": "Message-ID: <CALhGdDzptNxVnjrgHxfu=ADqoGOyx0E_X90sXNvNfqyobNcppA@mail.gmail.com>",
+            "subject": "Subject: Fwd: Important updates in Gemini Apps",
+            "to": "To: oswalswayam@gmail.com",
+            "content-type": "Content-Type: multipart/alternative; boundary=\"0000000000002d9c66063d471c4c\""
+          },
+          "html": "<div dir=\"auto\"></div><br><div class=\"gmail_quote gmail_quote_container\"><div dir=\"ltr\" class=\"gmail_attr\">---------- Forwarded message ---------<br>From: <strong class=\"gmail_sendername\" dir=\"auto\">Google Gemini</strong> <span dir=\"auto\">&lt;<a href=\"mailto:google-gemini-noreply@google.com\">google-gemini-noreply@google.com</a>&gt;</span><br>Date: Sat, 16 Aug 2025, 9:15 am<br>Subject: Important updates in Gemini Apps<br>To:  &lt;<a href=\"mailto:swayamofoswal@gmail.com\">swayamofoswal@gmail.com</a>&gt;<br></div><br><br>\n<u></u>\n\n\n\n  \n  \n  \n  \n  \n    \n\n   \n   \n  \n  \n\n<u></u>\n\n \n\n \n    \n\n\n  \n<div style=\"Margin:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;width:100%;direction:ltr\" dir=\"ltr\">\n<div style=\"display:none;font-size:1px;color:#333333;line-height:10px;max-height:0px;max-width:0px;opacity:0;overflow:hidden\">New features and settings to help you remain in control of your data.</div>\n<div style=\"font-size:0px;line-height:0px;color:#ffffff;display:none\"> ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  </div>\n<center style=\"width:100%;table-layout:fixed\">\n\n<table role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"720\" align=\"center\" style=\"border-spacing:0;border:0;border-collapse:collapse;font-family:Roboto,Arial,sans-serif;color:#444444;Margin:0 auto;width:720px;max-width:720px;direction:ltr\">\n<tr>\n  <td bgcolor=\"#ffffff\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;border:1px solid #b9bcbb;background-color:#f0f4fa\">\n  \n\n<table class=\"m_-1881501460910158131hero_mob m_-1881501460910158131mob_hide\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"width:100%\">\n   <tr>\n      <td align=\"center\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0\">\n         <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"width:100%\">\n            <tr>\n              \n               \n\t\t\t\t\t\t\t\t\n\t\t\t\t\t\t\t\t\t <td class=\"m_-1881501460910158131wrap-inner\" align=\"center\" style=\"padding:26px 0px 26px;width:32px\">\n                  <img src=\"https://www.gstatic.com/gumdrop/files/gemini-spark-logo-gif-transparent-w90px-h90px-2x.gif\" class=\"m_-1881501460910158131logo_mob_img\" width=\"28\" style=\"vertical-align:top\">\n               </td>\n\t\t\t\t\t\t\t\t\n            </tr>\n         </table>\n      </td>\n   </tr>\n</table>\n\n<table class=\"m_-1881501460910158131mob_show m_-1881501460910158131wrap-inner\" role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"width:100%;display:none\">\n   <tr>\n      <td align=\"center\" style=\"text-align:center\"><img align=\"center\" src=\"https://www.gstatic.com/gumdrop/files/gemini-spark-logo-gif-transparent-w90px-h90px-2x.gif\" class=\"m_-1881501460910158131logo_mob_img\" width=\"32\" style=\"vertical-align:top;width:32px\"></td>\n   </tr>\n</table>\n\n\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"width:100;min-width:100%\">\n\t<tr>\n\t\t<td class=\"m_-1881501460910158131mob_outer_style\" style=\"padding:0 40px 40px\">\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"width:100%;background-color:#fff;border-radius:24px\">\n\t<tr>\n\t\t<td class=\"m_-1881501460910158131mob_inner_style\" style=\"padding:40px 35px 24px 35px\">\n\n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;font-size:32px;line-height:38px;font-weight:700;text-align:center;color:#000000;letter-spacing:-0.32px;word-break:break-word\">\n                  Introducing temporary chats and new data controls\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;padding-bottom:16px;word-break:break-word\">\n                  Hi Swayam,\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;word-break:break-word\">\n                  To help you manage and remain in control of your data, we are introducing a new feature in <span style=\"white-space:nowrap!important\">Gemini</span> Apps called <a href=\"https://c.gle/ANiao5pf-sHJJ6AeDOytYstn19SSy3noRtPxKn2foWcQXaVs0qSN1GJmjfs8kRscad0MZzC0Bc1S213jkZVQbm9cIWkh8zyUKzTbS2EkNNbsPwhtAyzs4Utjjj2SbEBOdUQCs0MOmdRdC0eSR1i34HlWu24B4nJbEBThpqdcmc3jRas7Wzo6hQ\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">Temporary Chat</a> and updating your data controls in <a href=\"https://c.gle/ANiao5pPtHbfEGyXN5qa5XuOSStIYiatDgWtX6eJoZSIXBCXVnFz5LB7Xyuf_YiLvChQdSCQwNIOCffnl4Fpxa2LRYpDbj2gSthLagwBYtE69MFzF6O1Me1E_x4YxvMqsE6zFP6Ww2kqMqPwlJG3J-BcJ5Px6LYrVVd_7w\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\"><span style=\"white-space:nowrap!important\">Gemini</span> <span style=\"white-space:nowrap!important\">Apps activity</span></a>.\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n          \n\n\n<table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td class=\"m_-1881501460910158131mobpaddall\" style=\"padding-bottom:14px\">\n         <table class=\"m_-1881501460910158131wrap-inner\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"720\" style=\"width:560px;width:570px\" align=\"center\">\n            <tr>\n               <td valign=\"top\" class=\"m_-1881501460910158131bullet_device\" style=\"margin:0;padding:0;vertical-align:top;width:23px!important;text-align:center;color:#000000;font-weight:700;padding-top:3px!important\" width=\"23\">•</td>\n               <td class=\"m_-1881501460910158131bulletpaddmob\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-top:2px;padding-left:0px;padding-right:0px\">\n                  <span style=\"font-weight:bold!important\">Temporary chats:</span> With this new feature rolling out over the coming days, you&#39;ll be able to quickly start a new chat with <span style=\"white-space:nowrap!important\">Gemini</span> that won&#39;t be used to personalise future chats or train models. Temporary chats also won&#39;t appear in <a href=\"https://c.gle/ANiao5pGoCd-B2Es1X3uJjPOG8E36MU1GU2DcsDYHHoWqmkE9zTM2MynfAF1SCMXDFY91EMkC_IFy6U3-mfkyLAP5d2ifYT_aYjBefQqPwT2oKzExiFbuabu_fCcy8uU7JUsCS61MY8Bhh3fZ3EIAP9eY8PHDOnorSYIsPjqsVh20THRIlTpFs4\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">Recent chats</a> or <a href=\"https://c.gle/ANiao5pjc4UneMPyxjh6Ij2ATaKIAxhr0WdpeG2q2FpgGKja3_wSiY6gq6qdoeeyG9-1asfSNA0P4Hm9vgdk7wH8DxgFLqu6IuCNlYssW9Ybl4lmd_0w-PhwGtS3lJRC8qDzUcfQbkVxI36q1J8HFAjomWcT8kcE33-Ugg\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\"><span style=\"white-space:nowrap!important\">Gemini</span> Apps activity</a>. They&#39;ll be saved for <span style=\"white-space:nowrap!important\">72 hours</span> so that <span style=\"white-space:nowrap!important\">Gemini</span> can respond to you and for safety purposes. <a href=\"https://c.gle/ANiao5opabG6Cnrh2t298bxookGOCyjR6W0ubc1u423UGwGOeXv1eskETRxEm6XKEXcAff8dp_b1CTTXDFWGmWL_99JPejQXHVqMtLBWxRR2mNivdLaj5QNsVoWyxDpwhcfBojd6u6O8eXDd0IogUybWSsTGtCWRcVkq6NLIx7dl9zMupz-chMBdFgMWUfxy\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">Learn how to start a <span style=\"white-space:nowrap!important\">temporary chat</span></a>.\n               </td>\n            </tr>\n         </table>\n      </td>\n   </tr>\n</table>\n\n\n<table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td class=\"m_-1881501460910158131mobpaddall\" style=\"padding-bottom:14px\">\n         <table class=\"m_-1881501460910158131wrap-inner\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"720\" style=\"width:560px;width:564px\" align=\"center\">\n            <tr>\n               <td valign=\"top\" class=\"m_-1881501460910158131bullet_device\" style=\"margin:0;padding:0;vertical-align:top;width:23px!important;text-align:center;color:#000000;font-weight:700;padding-top:3px!important\" width=\"23\">•</td>\n               <td class=\"m_-1881501460910158131bulletpaddmob\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-top:2px;padding-left:0px;padding-right:0px\">\n                  <span style=\"font-weight:bold!important\">Your uploads:</span> We&#39;re also updating our data handling practices for uploads. In the coming weeks, we&#39;ll update the name of the <span style=\"white-space:nowrap!important\">Gemini</span> Apps activity setting on the <a href=\"https://c.gle/ANiao5ptJV7E4jS8ABA_6BHHGXS2I8fK_rSTYQcRO-TxRTmnvPwOZ5lhqS8S37a3YU6Tld7vhrYKCIeKg3708vCyZdOd_h7dZXadwMczmKk2oP6QVj2Gs5eCSCqWpYI2st03zAqXvsL5-pRK1bt36GSc3tkABxj-BGaPpg\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\"><span style=\"white-space:nowrap!important\">Gemini</span> Apps activity</a> page to &#39;Keep activity&#39;. If this setting is on, you can see your past chats in Recent chats and in <span style=\"white-space:nowrap!important\">Gemini</span> Apps activity, and pick them up where you left off at any time. A subset of uploads submitted starting from <span style=\"white-space:nowrap!important\">2 September – </span>like files, videos, <a href=\"https://c.gle/ANiao5rtcE9e_M5aRtVnTRpJD38l_yD0Lu39eRJ9ewJ5ZqutNShEY72FTxtXvUTqhEwaNIHi1cRWhCZQWbQvk9PM43_Twv2G7UQYHETJva7XCqtleZAIHT9OObAOM5KSeJa8daQ8WLr7ltVOPsaoy04l8QvMCzdfEcoYvixNoDpF022htPj2_agKFbpFOazp\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">screens that you ask about</a> and photos shared with <span style=\"white-space:nowrap!important\">Gemini</span> – will also be used to help improve <span style=\"white-space:nowrap!important\">Google</span> services for everyone. To stop this, you can <a href=\"https://c.gle/ANiao5rJTSL5OwuGgRKkmQ-zmBlkybwlvBYY_hKe7LM9XfS903bq9A11gYLQLTkK08y-wLUxC9B9NFyPz6kylYf82Dgi37KsZU3pcLEgY_X9WmklesZKvwllErQunFn8T2h-jq7hq4yYnhmd4Zjq4woaPmC1um5XISd_AA_7q02PaYM13r5CJKcMSOxtX3aY7A4QUQ\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">turn off Keep activity</a>. You can also <a href=\"https://c.gle/ANiao5rC65cvmYvQ2vZ0Ib19sKLyr-tMCufXJ0MVSr1MhP6TrYuGyRJu5hugrlriqKMcIh90Zia1YV5eT2uFNqCFapxBY42pR0LPndez7eS65S0BjntVCx9ZyZFTdEWpTExfcfb-PwN5OT21q76VZVV4U_5FzD6s-mdlqYDEvQdB06438LEGmiiJ0GkorHELlg\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">manage and delete</a> your activity at any time. And, if your <span style=\"white-space:nowrap!important\">Gemini</span> Apps activity setting is currently off, your Keep activity setting will remain off unless you turn it on.\n               </td>\n            </tr>\n         </table>\n      </td>\n   </tr>\n</table>\n\n\n<table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td class=\"m_-1881501460910158131mobpaddall\" style=\"padding-bottom:14px\">\n         <table class=\"m_-1881501460910158131wrap-inner\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"720\" style=\"width:560px;width:568px\" align=\"center\">\n            <tr>\n               <td valign=\"top\" class=\"m_-1881501460910158131bullet_device\" style=\"margin:0;padding:0;vertical-align:top;width:23px!important;text-align:center;color:#000000;font-weight:700;padding-top:3px!important\" width=\"23\">•</td>\n               <td class=\"m_-1881501460910158131bulletpaddmob\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-top:2px;padding-left:0px;padding-right:0px\">\n                  <span style=\"font-weight:bold!important\">Your Gemini audio and Gemini Live recordings:</span> With this new setting rolling out in <span style=\"white-space:nowrap!important\">Gemini</span> Apps activity over the coming days, you can choose to improve <span style=\"white-space:nowrap!important\">Google</span> services for everyone with your <span style=\"white-space:nowrap!important\">Gemini</span> audio and <a href=\"https://c.gle/ANiao5pp9CYXOXWjA9f8FoNjuKUgFfAUbIWpQO1e2FfoOiYwxQpKDKLdbEq1jC6APtmk79cVEz57tltZNObAp7K5Rra7XghZzDNr8IL_qrwixuAkAhuqZrSkX6sqJV5LGyC7Ag3zR8q4H7g5lcNURyY8jyN_W08v\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\"><span style=\"white-space:nowrap!important\">Gemini</span> Live</a> recordings. <span style=\"white-space:nowrap!important\">Gemini</span> audio includes audio collected when you click the microphone button. <span style=\"white-space:nowrap!important\">Gemini</span> Live recordings include audio, <a href=\"https://c.gle/ANiao5orWf5aFmEub27t2a_Ikx9K1yiSP88dp8fgdnvoq5qXLhI7nCL9lp2cNSP9KePerzVTbuH-BidGC2ztnXUgRPId1h2KPD0Jh9s_zkuBN5nod_GoeKJcO9i1ST9Y2LiZSTBma07hlaNNdvutIzgI3pVlbYtZ_75xDrY1SFeVOr08nllh\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">video and screenshares</a>. This new setting is off by default, but you can <a href=\"https://c.gle/ANiao5pgs4P0LONxXfzohKgSAENSmyjlBtkP0jusFu5XsGhjmeZkp2qnAFKXNT61HqOWjsIrdmAich5NSSp2jBzS-TMaqxzFlRmDYNTgb739WJWtrEnqD0SRc_fX70NXblKUMKgi0MXP2V2ObTubd-inenPTyhgj1bwn7jIbEGvWP6-ZCTRmVwT1fe3awbM\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">turn it on at any time</a>.\n               </td>\n            </tr>\n         </table>\n      </td>\n   </tr>\n</table>\n\n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;word-break:break-word\">\n                  As before, when Google uses your activity to improve its services (including training generative AI models), it gets help from human reviewers. To protect your privacy, we disconnect chats from your account before sending them to service providers. In alignment with our <a href=\"https://c.gle/ANiao5oQPxDJ2fJqQO9CPe0dPV40JfLStUS4o3F9CWbbjSDnQFGIr7XdcUjJtfHSHl6QBbC5Ajxa9qgkbmHYYg2ViLgcAfZuRy8hTGUmx_pm1QX86evQueWcX3r9rPi_DaFV6vU7Cxqw8ujzxFaRQpRIq2Z8bw\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">privacy principles</a>, we build technical data protections that safeguard and ensure the responsible use of data and provide you with tools to control your <span style=\"white-space:nowrap!important\">Gemini</span> experience. You can learn more in the <a href=\"https://c.gle/ANiao5qLTEI8BJXsium__ZFFMwM8ELyHItR0J6RQOryCrE_VgG7xrittgZNS5Bn0MU4Rf2jrzdB1zuVEbCW5MnXwIVRjiyPFaAq3-fPY-NGFDlqDY6RcuOBsg_WaXqFuol7bWPyZLM24UJUB_qamF5sPAJ2ocg_jds4dLWru2TcG1JfZqQXOWP7qKhLmEsJhIFcj2PtP\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\"><span style=\"white-space:nowrap!important\">Gemini</span> Apps Privacy Notice</a> and the <a href=\"https://c.gle/ANiao5rk2VzV0pkSpibiaLMz0-JRygaHFhXsoZSMDYnJcjeY6Dd-AQczEVPxha_y9XxPtDiTR9iuo00FbnpLObmseKGdE4cylrCszM_AWy4YBNMOHvplsxwWD3CjJpcL-vPUha0dvuJT1x5xcZAA1S5UbctpEN2gEdq_W4moFgdn6-1H4Gt6TjddOE6IEmP_qgIq\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">Gemini Apps Privacy Hub</a>. <span style=\"white-space:nowrap!important\">Google&#39;s</span> <a href=\"https://c.gle/ANiao5pn4jNTB5hXPsZR1ZC4XOt-RWB18w6JtTLzVmAH4wHb9pL0yqVKnjFl4ZODUk-QMU1-DztBMfPOf0sRRp-H-eYwimvKzSeuRN5uHalZ0SPoXF7JAgHkZbAusn3IdgolWpQbFsZdQCElq6moxosjd7K7hDyKjTEv4ilO_Zi_m1_Z8Ss2cxA3FID-ZXfnEQbEyqzvdH4v\" class=\"m_-1881501460910158131mob_custom\" style=\"color:#078efb;text-decoration:none!important;text-decoration:none;font-weight:700;border:0;letter-spacing:normal\" target=\"_blank\" rel=\"noreferrer\">Generative AI Prohibited Use Policy</a> <span style=\"white-space:nowrap!important\">applies.</span>\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n          \n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;padding-bottom:2px;word-break:break-word\">\n                  Sincerely,\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n\n  <table align=\"center\" bgcolor=\"#ffffff\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" class=\"m_-1881501460910158131wrap-inner\" style=\"background-color:#ffffff\">\n   <tr>\n      <td>\n         <table class=\"m_-1881501460910158131wrap-inner\" dir=\"ltr\" cellpadding=\"0\" cellspacing=\"0\" role=\"presentation\" width=\"562\" style=\"width:562px\" align=\"center\">\n            <tr>\n               <td class=\"m_-1881501460910158131mobpaddall\" style=\"margin-top:0;margin-bottom:0;margin-right:0;margin-left:0;padding-top:0;padding-bottom:0;padding-right:0;padding-left:0;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;font-weight:400;color:#000000;text-align:left;padding-left:0px;padding-right:0px;padding-bottom:16px;letter-spacing:0px;word-break:break-word\">\n                  The Gemini Team\n               </td>\n            </tr>\n        </table>\n     </td>\n    </tr>\n  </table>\n\t\t</td>\n\t</tr>\n</table>\n\t\t</td>\n\t</tr>\n</table>\n\n  <table role=\"presentation\" align=\"center\" cellspacing=\"0\" style=\"width:100%;background-color:#fff\">\n    <tr>\n      <td class=\"m_-1881501460910158131mob_footer\" dir=\"ltr\" style=\"width:100%;padding-top:40px;padding-bottom:11px;text-align:center\">\n        <img width=\"62.22\" src=\"https://www.gstatic.com/gumdrop/files/gemini-l-28-footer-google-logo-transparent-w253px-h80px-2x.png\" border=\"0\" style=\"border:none;outline:none;font-size:8px;color:#3c4043\">\n      </td>\n    </tr>\n  <tr>\n    <td class=\"m_-1881501460910158131mob_footer\" style=\"width:100%;table-layout:fixed;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:8px;line-height:12px;font-weight:400;word-break:break-word;color:#000000;padding-left:140px;padding-right:140px;padding-bottom:16px;padding-top:0px;text-align:center\" dir=\"ltr\">\n    <a style=\"color:#000000\" rel=\"noreferrer\">\n      <span style=\"font-size:inherit;color:inherit;font-weight:inherit;line-height:inherit;font-family:inherit\">© 2025 Google LLC<br>1600 Amphitheatre Parkway,<br>Mountain View, CA 94043</span>\n   \n   \n</a>\n    </td>\n  </tr>\n  <tr>\n    <td class=\"m_-1881501460910158131mob_footer\" style=\"width:100%;table-layout:fixed;font-family:&#39;Google sans&#39;,&#39;Roboto&#39;,Arial,Helvetica,sans-serif;font-size:8px;line-height:12px;font-weight:400;color:#000000;padding-left:146px;padding-right:143px;padding-bottom:40px;text-align:center;direction:ltr\">\n    You have received this mandatory service announcement to update you about important changes <span style=\"white-space:nowrap!important\">to Gemini.</span>\n    </td>\n  </tr>\n  </table>\n\n </td>\n  </tr>\n  </table>\n  \n  </center>\n  <img alt=\"\" height=\"1\" width=\"3\" src=\"https://notifications.google.com/g/img/ANiao5pmRa_YP9kB-YdaFhZD6CJx8pVxyDIiqjHunitB1ZWqquR1VFCpDUpg3gVp3n4k0dCVGOvtqVxSHHjlxATodpzO4bQ_SUDNRTVEloVNYU7bSagMl8-ba-U4uOTVGLV47Y-Onw.gif\"></div>\n  \n</div>\n",
+          "text": "---------- Forwarded message ---------\nFrom: Google Gemini <google-gemini-noreply@google.com>\nDate: Sat, 16 Aug 2025, 9:15 am\nSubject: Important updates in Gemini Apps\nTo: <swayamofoswal@gmail.com>\n\n\nNew features and settings to help you remain in control of your data.\n ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\n‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌\n‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\n‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\n‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌\n‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\n‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌  ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌ ‌\n\nIntroducing temporary chats and new data controls\nHi Swayam,\nTo help you manage and remain in control of your data, we are introducing a\nnew feature in Gemini Apps called Temporary Chat\n<https://c.gle/ANiao5pf-sHJJ6AeDOytYstn19SSy3noRtPxKn2foWcQXaVs0qSN1GJmjfs8kRscad0MZzC0Bc1S213jkZVQbm9cIWkh8zyUKzTbS2EkNNbsPwhtAyzs4Utjjj2SbEBOdUQCs0MOmdRdC0eSR1i34HlWu24B4nJbEBThpqdcmc3jRas7Wzo6hQ>\nand updating your data controls in Gemini Apps activity\n<https://c.gle/ANiao5pPtHbfEGyXN5qa5XuOSStIYiatDgWtX6eJoZSIXBCXVnFz5LB7Xyuf_YiLvChQdSCQwNIOCffnl4Fpxa2LRYpDbj2gSthLagwBYtE69MFzF6O1Me1E_x4YxvMqsE6zFP6Ww2kqMqPwlJG3J-BcJ5Px6LYrVVd_7w>.\n\n• Temporary chats: With this new feature rolling out over the coming days,\nyou'll be able to quickly start a new chat with Gemini that won't be used\nto personalise future chats or train models. Temporary chats also won't\nappear in Recent chats\n<https://c.gle/ANiao5pGoCd-B2Es1X3uJjPOG8E36MU1GU2DcsDYHHoWqmkE9zTM2MynfAF1SCMXDFY91EMkC_IFy6U3-mfkyLAP5d2ifYT_aYjBefQqPwT2oKzExiFbuabu_fCcy8uU7JUsCS61MY8Bhh3fZ3EIAP9eY8PHDOnorSYIsPjqsVh20THRIlTpFs4>\nor Gemini Apps activity\n<https://c.gle/ANiao5pjc4UneMPyxjh6Ij2ATaKIAxhr0WdpeG2q2FpgGKja3_wSiY6gq6qdoeeyG9-1asfSNA0P4Hm9vgdk7wH8DxgFLqu6IuCNlYssW9Ybl4lmd_0w-PhwGtS3lJRC8qDzUcfQbkVxI36q1J8HFAjomWcT8kcE33-Ugg>.\nThey'll be saved for 72 hours so that Gemini can respond to you and for\nsafety purposes. Learn how to start a temporary chat\n<https://c.gle/ANiao5opabG6Cnrh2t298bxookGOCyjR6W0ubc1u423UGwGOeXv1eskETRxEm6XKEXcAff8dp_b1CTTXDFWGmWL_99JPejQXHVqMtLBWxRR2mNivdLaj5QNsVoWyxDpwhcfBojd6u6O8eXDd0IogUybWSsTGtCWRcVkq6NLIx7dl9zMupz-chMBdFgMWUfxy>.\n\n• Your uploads: We're also updating our data handling practices for\nuploads. In the coming weeks, we'll update the name of the Gemini Apps\nactivity setting on the Gemini Apps activity\n<https://c.gle/ANiao5ptJV7E4jS8ABA_6BHHGXS2I8fK_rSTYQcRO-TxRTmnvPwOZ5lhqS8S37a3YU6Tld7vhrYKCIeKg3708vCyZdOd_h7dZXadwMczmKk2oP6QVj2Gs5eCSCqWpYI2st03zAqXvsL5-pRK1bt36GSc3tkABxj-BGaPpg>\npage to 'Keep activity'. If this setting is on, you can see your past chats\nin Recent chats and in Gemini Apps activity, and pick them up where you\nleft off at any time. A subset of uploads submitted starting from 2\nSeptember – like files, videos, screens that you ask about\n<https://c.gle/ANiao5rtcE9e_M5aRtVnTRpJD38l_yD0Lu39eRJ9ewJ5ZqutNShEY72FTxtXvUTqhEwaNIHi1cRWhCZQWbQvk9PM43_Twv2G7UQYHETJva7XCqtleZAIHT9OObAOM5KSeJa8daQ8WLr7ltVOPsaoy04l8QvMCzdfEcoYvixNoDpF022htPj2_agKFbpFOazp>\nand photos shared with Gemini – will also be used to help improve Google\nservices for everyone. To stop this, you can turn off Keep activity\n<https://c.gle/ANiao5rJTSL5OwuGgRKkmQ-zmBlkybwlvBYY_hKe7LM9XfS903bq9A11gYLQLTkK08y-wLUxC9B9NFyPz6kylYf82Dgi37KsZU3pcLEgY_X9WmklesZKvwllErQunFn8T2h-jq7hq4yYnhmd4Zjq4woaPmC1um5XISd_AA_7q02PaYM13r5CJKcMSOxtX3aY7A4QUQ>.\nYou can also manage and delete\n<https://c.gle/ANiao5rC65cvmYvQ2vZ0Ib19sKLyr-tMCufXJ0MVSr1MhP6TrYuGyRJu5hugrlriqKMcIh90Zia1YV5eT2uFNqCFapxBY42pR0LPndez7eS65S0BjntVCx9ZyZFTdEWpTExfcfb-PwN5OT21q76VZVV4U_5FzD6s-mdlqYDEvQdB06438LEGmiiJ0GkorHELlg>\nyour activity at any time. And, if your Gemini Apps activity setting is\ncurrently off, your Keep activity setting will remain off unless you turn\nit on.\n• Your Gemini audio and Gemini Live recordings: With this new setting\nrolling out in Gemini Apps activity over the coming days, you can choose to\nimprove Google services for everyone with your Gemini audio and Gemini Live\n<https://c.gle/ANiao5pp9CYXOXWjA9f8FoNjuKUgFfAUbIWpQO1e2FfoOiYwxQpKDKLdbEq1jC6APtmk79cVEz57tltZNObAp7K5Rra7XghZzDNr8IL_qrwixuAkAhuqZrSkX6sqJV5LGyC7Ag3zR8q4H7g5lcNURyY8jyN_W08v>\nrecordings. Gemini audio includes audio collected when you click the\nmicrophone button. Gemini Live recordings include audio, video and\nscreenshares\n<https://c.gle/ANiao5orWf5aFmEub27t2a_Ikx9K1yiSP88dp8fgdnvoq5qXLhI7nCL9lp2cNSP9KePerzVTbuH-BidGC2ztnXUgRPId1h2KPD0Jh9s_zkuBN5nod_GoeKJcO9i1ST9Y2LiZSTBma07hlaNNdvutIzgI3pVlbYtZ_75xDrY1SFeVOr08nllh>.\nThis new setting is off by default, but you can turn it on at any time\n<https://c.gle/ANiao5pgs4P0LONxXfzohKgSAENSmyjlBtkP0jusFu5XsGhjmeZkp2qnAFKXNT61HqOWjsIrdmAich5NSSp2jBzS-TMaqxzFlRmDYNTgb739WJWtrEnqD0SRc_fX70NXblKUMKgi0MXP2V2ObTubd-inenPTyhgj1bwn7jIbEGvWP6-ZCTRmVwT1fe3awbM>.\n\nAs before, when Google uses your activity to improve its services\n(including training generative AI models), it gets help from human\nreviewers. To protect your privacy, we disconnect chats from your account\nbefore sending them to service providers. In alignment with our privacy\nprinciples\n<https://c.gle/ANiao5oQPxDJ2fJqQO9CPe0dPV40JfLStUS4o3F9CWbbjSDnQFGIr7XdcUjJtfHSHl6QBbC5Ajxa9qgkbmHYYg2ViLgcAfZuRy8hTGUmx_pm1QX86evQueWcX3r9rPi_DaFV6vU7Cxqw8ujzxFaRQpRIq2Z8bw>,\nwe build technical data protections that safeguard and ensure the\nresponsible use of data and provide you with tools to control your Gemini\nexperience. You can learn more in the Gemini Apps Privacy Notice\n<https://c.gle/ANiao5qLTEI8BJXsium__ZFFMwM8ELyHItR0J6RQOryCrE_VgG7xrittgZNS5Bn0MU4Rf2jrzdB1zuVEbCW5MnXwIVRjiyPFaAq3-fPY-NGFDlqDY6RcuOBsg_WaXqFuol7bWPyZLM24UJUB_qamF5sPAJ2ocg_jds4dLWru2TcG1JfZqQXOWP7qKhLmEsJhIFcj2PtP>\nand the Gemini Apps Privacy Hub\n<https://c.gle/ANiao5rk2VzV0pkSpibiaLMz0-JRygaHFhXsoZSMDYnJcjeY6Dd-AQczEVPxha_y9XxPtDiTR9iuo00FbnpLObmseKGdE4cylrCszM_AWy4YBNMOHvplsxwWD3CjJpcL-vPUha0dvuJT1x5xcZAA1S5UbctpEN2gEdq_W4moFgdn6-1H4Gt6TjddOE6IEmP_qgIq>.\nGoogle's Generative AI Prohibited Use Policy\n<https://c.gle/ANiao5pn4jNTB5hXPsZR1ZC4XOt-RWB18w6JtTLzVmAH4wHb9pL0yqVKnjFl4ZODUk-QMU1-DztBMfPOf0sRRp-H-eYwimvKzSeuRN5uHalZ0SPoXF7JAgHkZbAusn3IdgolWpQbFsZdQCElq6moxosjd7K7hDyKjTEv4ilO_Zi_m1_Z8Ss2cxA3FID-ZXfnEQbEyqzvdH4v>\napplies.\nSincerely,\nThe Gemini Team\n© 2025 Google LLC\n1600 Amphitheatre Parkway,\nMountain View, CA 94043\nYou have received this mandatory service announcement to update you about\nimportant changes to Gemini.\n",
+          "textAsHtml": "<p>---------- Forwarded message ---------<br/>From: Google Gemini &lt;<a href=\"mailto:google-gemini-noreply@google.com\">google-gemini-noreply@google.com</a>&gt;<br/>Date: Sat, 16 Aug 2025, 9:15 am<br/>Subject: Important updates in Gemini Apps<br/>To: &lt;<a href=\"mailto:swayamofoswal@gmail.com\">swayamofoswal@gmail.com</a>&gt;</p><p>New features and settings to help you remain in control of your data.<br/> &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;<br/>&zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;  &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj; &zwnj;</p><p>Introducing temporary chats and new data controls<br/>Hi Swayam,<br/>To help you manage and remain in control of your data, we are introducing a<br/>new feature in Gemini Apps called Temporary Chat<br/>&lt;<a href=\"https://c.gle/ANiao5pf-sHJJ6AeDOytYstn19SSy3noRtPxKn2foWcQXaVs0qSN1GJmjfs8kRscad0MZzC0Bc1S213jkZVQbm9cIWkh8zyUKzTbS2EkNNbsPwhtAyzs4Utjjj2SbEBOdUQCs0MOmdRdC0eSR1i34HlWu24B4nJbEBThpqdcmc3jRas7Wzo6hQ\">https://c.gle/ANiao5pf-sHJJ6AeDOytYstn19SSy3noRtPxKn2foWcQXaVs0qSN1GJmjfs8kRscad0MZzC0Bc1S213jkZVQbm9cIWkh8zyUKzTbS2EkNNbsPwhtAyzs4Utjjj2SbEBOdUQCs0MOmdRdC0eSR1i34HlWu24B4nJbEBThpqdcmc3jRas7Wzo6hQ</a>&gt;<br/>and updating your data controls in Gemini Apps activity<br/>&lt;<a href=\"https://c.gle/ANiao5pPtHbfEGyXN5qa5XuOSStIYiatDgWtX6eJoZSIXBCXVnFz5LB7Xyuf_YiLvChQdSCQwNIOCffnl4Fpxa2LRYpDbj2gSthLagwBYtE69MFzF6O1Me1E_x4YxvMqsE6zFP6Ww2kqMqPwlJG3J-BcJ5Px6LYrVVd_7w\">https://c.gle/ANiao5pPtHbfEGyXN5qa5XuOSStIYiatDgWtX6eJoZSIXBCXVnFz5LB7Xyuf_YiLvChQdSCQwNIOCffnl4Fpxa2LRYpDbj2gSthLagwBYtE69MFzF6O1Me1E_x4YxvMqsE6zFP6Ww2kqMqPwlJG3J-BcJ5Px6LYrVVd_7w</a>&gt;.</p><p>&bull; Temporary chats: With this new feature rolling out over the coming days,<br/>you&apos;ll be able to quickly start a new chat with Gemini that won&apos;t be used<br/>to personalise future chats or train models. Temporary chats also won&apos;t<br/>appear in Recent chats<br/>&lt;<a href=\"https://c.gle/ANiao5pGoCd-B2Es1X3uJjPOG8E36MU1GU2DcsDYHHoWqmkE9zTM2MynfAF1SCMXDFY91EMkC_IFy6U3-mfkyLAP5d2ifYT_aYjBefQqPwT2oKzExiFbuabu_fCcy8uU7JUsCS61MY8Bhh3fZ3EIAP9eY8PHDOnorSYIsPjqsVh20THRIlTpFs4\">https://c.gle/ANiao5pGoCd-B2Es1X3uJjPOG8E36MU1GU2DcsDYHHoWqmkE9zTM2MynfAF1SCMXDFY91EMkC_IFy6U3-mfkyLAP5d2ifYT_aYjBefQqPwT2oKzExiFbuabu_fCcy8uU7JUsCS61MY8Bhh3fZ3EIAP9eY8PHDOnorSYIsPjqsVh20THRIlTpFs4</a>&gt;<br/>or Gemini Apps activity<br/>&lt;<a href=\"https://c.gle/ANiao5pjc4UneMPyxjh6Ij2ATaKIAxhr0WdpeG2q2FpgGKja3_wSiY6gq6qdoeeyG9-1asfSNA0P4Hm9vgdk7wH8DxgFLqu6IuCNlYssW9Ybl4lmd_0w-PhwGtS3lJRC8qDzUcfQbkVxI36q1J8HFAjomWcT8kcE33-Ugg\">https://c.gle/ANiao5pjc4UneMPyxjh6Ij2ATaKIAxhr0WdpeG2q2FpgGKja3_wSiY6gq6qdoeeyG9-1asfSNA0P4Hm9vgdk7wH8DxgFLqu6IuCNlYssW9Ybl4lmd_0w-PhwGtS3lJRC8qDzUcfQbkVxI36q1J8HFAjomWcT8kcE33-Ugg</a>&gt;.<br/>They&apos;ll be saved for 72 hours so that Gemini can respond to you and for<br/>safety purposes. Learn how to start a temporary chat<br/>&lt;<a href=\"https://c.gle/ANiao5opabG6Cnrh2t298bxookGOCyjR6W0ubc1u423UGwGOeXv1eskETRxEm6XKEXcAff8dp_b1CTTXDFWGmWL_99JPejQXHVqMtLBWxRR2mNivdLaj5QNsVoWyxDpwhcfBojd6u6O8eXDd0IogUybWSsTGtCWRcVkq6NLIx7dl9zMupz-chMBdFgMWUfxy\">https://c.gle/ANiao5opabG6Cnrh2t298bxookGOCyjR6W0ubc1u423UGwGOeXv1eskETRxEm6XKEXcAff8dp_b1CTTXDFWGmWL_99JPejQXHVqMtLBWxRR2mNivdLaj5QNsVoWyxDpwhcfBojd6u6O8eXDd0IogUybWSsTGtCWRcVkq6NLIx7dl9zMupz-chMBdFgMWUfxy</a>&gt;.</p><p>&bull; Your uploads: We&apos;re also updating our data handling practices for<br/>uploads. In the coming weeks, we&apos;ll update the name of the Gemini Apps<br/>activity setting on the Gemini Apps activity<br/>&lt;<a href=\"https://c.gle/ANiao5ptJV7E4jS8ABA_6BHHGXS2I8fK_rSTYQcRO-TxRTmnvPwOZ5lhqS8S37a3YU6Tld7vhrYKCIeKg3708vCyZdOd_h7dZXadwMczmKk2oP6QVj2Gs5eCSCqWpYI2st03zAqXvsL5-pRK1bt36GSc3tkABxj-BGaPpg\">https://c.gle/ANiao5ptJV7E4jS8ABA_6BHHGXS2I8fK_rSTYQcRO-TxRTmnvPwOZ5lhqS8S37a3YU6Tld7vhrYKCIeKg3708vCyZdOd_h7dZXadwMczmKk2oP6QVj2Gs5eCSCqWpYI2st03zAqXvsL5-pRK1bt36GSc3tkABxj-BGaPpg</a>&gt;<br/>page to &apos;Keep activity&apos;. If this setting is on, you can see your past chats<br/>in Recent chats and in Gemini Apps activity, and pick them up where you<br/>left off at any time. A subset of uploads submitted starting from 2<br/>September &ndash; like files, videos, screens that you ask about<br/>&lt;<a href=\"https://c.gle/ANiao5rtcE9e_M5aRtVnTRpJD38l_yD0Lu39eRJ9ewJ5ZqutNShEY72FTxtXvUTqhEwaNIHi1cRWhCZQWbQvk9PM43_Twv2G7UQYHETJva7XCqtleZAIHT9OObAOM5KSeJa8daQ8WLr7ltVOPsaoy04l8QvMCzdfEcoYvixNoDpF022htPj2_agKFbpFOazp\">https://c.gle/ANiao5rtcE9e_M5aRtVnTRpJD38l_yD0Lu39eRJ9ewJ5ZqutNShEY72FTxtXvUTqhEwaNIHi1cRWhCZQWbQvk9PM43_Twv2G7UQYHETJva7XCqtleZAIHT9OObAOM5KSeJa8daQ8WLr7ltVOPsaoy04l8QvMCzdfEcoYvixNoDpF022htPj2_agKFbpFOazp</a>&gt;<br/>and photos shared with Gemini &ndash; will also be used to help improve Google<br/>services for everyone. To stop this, you can turn off Keep activity<br/>&lt;<a href=\"https://c.gle/ANiao5rJTSL5OwuGgRKkmQ-zmBlkybwlvBYY_hKe7LM9XfS903bq9A11gYLQLTkK08y-wLUxC9B9NFyPz6kylYf82Dgi37KsZU3pcLEgY_X9WmklesZKvwllErQunFn8T2h-jq7hq4yYnhmd4Zjq4woaPmC1um5XISd_AA_7q02PaYM13r5CJKcMSOxtX3aY7A4QUQ\">https://c.gle/ANiao5rJTSL5OwuGgRKkmQ-zmBlkybwlvBYY_hKe7LM9XfS903bq9A11gYLQLTkK08y-wLUxC9B9NFyPz6kylYf82Dgi37KsZU3pcLEgY_X9WmklesZKvwllErQunFn8T2h-jq7hq4yYnhmd4Zjq4woaPmC1um5XISd_AA_7q02PaYM13r5CJKcMSOxtX3aY7A4QUQ</a>&gt;.<br/>You can also manage and delete<br/>&lt;<a href=\"https://c.gle/ANiao5rC65cvmYvQ2vZ0Ib19sKLyr-tMCufXJ0MVSr1MhP6TrYuGyRJu5hugrlriqKMcIh90Zia1YV5eT2uFNqCFapxBY42pR0LPndez7eS65S0BjntVCx9ZyZFTdEWpTExfcfb-PwN5OT21q76VZVV4U_5FzD6s-mdlqYDEvQdB06438LEGmiiJ0GkorHELlg\">https://c.gle/ANiao5rC65cvmYvQ2vZ0Ib19sKLyr-tMCufXJ0MVSr1MhP6TrYuGyRJu5hugrlriqKMcIh90Zia1YV5eT2uFNqCFapxBY42pR0LPndez7eS65S0BjntVCx9ZyZFTdEWpTExfcfb-PwN5OT21q76VZVV4U_5FzD6s-mdlqYDEvQdB06438LEGmiiJ0GkorHELlg</a>&gt;<br/>your activity at any time. And, if your Gemini Apps activity setting is<br/>currently off, your Keep activity setting will remain off unless you turn<br/>it on.<br/>&bull; Your Gemini audio and Gemini Live recordings: With this new setting<br/>rolling out in Gemini Apps activity over the coming days, you can choose to<br/>improve Google services for everyone with your Gemini audio and Gemini Live<br/>&lt;<a href=\"https://c.gle/ANiao5pp9CYXOXWjA9f8FoNjuKUgFfAUbIWpQO1e2FfoOiYwxQpKDKLdbEq1jC6APtmk79cVEz57tltZNObAp7K5Rra7XghZzDNr8IL_qrwixuAkAhuqZrSkX6sqJV5LGyC7Ag3zR8q4H7g5lcNURyY8jyN_W08v\">https://c.gle/ANiao5pp9CYXOXWjA9f8FoNjuKUgFfAUbIWpQO1e2FfoOiYwxQpKDKLdbEq1jC6APtmk79cVEz57tltZNObAp7K5Rra7XghZzDNr8IL_qrwixuAkAhuqZrSkX6sqJV5LGyC7Ag3zR8q4H7g5lcNURyY8jyN_W08v</a>&gt;<br/>recordings. Gemini audio includes audio collected when you click the<br/>microphone button. Gemini Live recordings include audio, video and<br/>screenshares<br/>&lt;<a href=\"https://c.gle/ANiao5orWf5aFmEub27t2a_Ikx9K1yiSP88dp8fgdnvoq5qXLhI7nCL9lp2cNSP9KePerzVTbuH-BidGC2ztnXUgRPId1h2KPD0Jh9s_zkuBN5nod_GoeKJcO9i1ST9Y2LiZSTBma07hlaNNdvutIzgI3pVlbYtZ_75xDrY1SFeVOr08nllh\">https://c.gle/ANiao5orWf5aFmEub27t2a_Ikx9K1yiSP88dp8fgdnvoq5qXLhI7nCL9lp2cNSP9KePerzVTbuH-BidGC2ztnXUgRPId1h2KPD0Jh9s_zkuBN5nod_GoeKJcO9i1ST9Y2LiZSTBma07hlaNNdvutIzgI3pVlbYtZ_75xDrY1SFeVOr08nllh</a>&gt;.<br/>This new setting is off by default, but you can turn it on at any time<br/>&lt;<a href=\"https://c.gle/ANiao5pgs4P0LONxXfzohKgSAENSmyjlBtkP0jusFu5XsGhjmeZkp2qnAFKXNT61HqOWjsIrdmAich5NSSp2jBzS-TMaqxzFlRmDYNTgb739WJWtrEnqD0SRc_fX70NXblKUMKgi0MXP2V2ObTubd-inenPTyhgj1bwn7jIbEGvWP6-ZCTRmVwT1fe3awbM\">https://c.gle/ANiao5pgs4P0LONxXfzohKgSAENSmyjlBtkP0jusFu5XsGhjmeZkp2qnAFKXNT61HqOWjsIrdmAich5NSSp2jBzS-TMaqxzFlRmDYNTgb739WJWtrEnqD0SRc_fX70NXblKUMKgi0MXP2V2ObTubd-inenPTyhgj1bwn7jIbEGvWP6-ZCTRmVwT1fe3awbM</a>&gt;.</p><p>As before, when Google uses your activity to improve its services<br/>(including training generative AI models), it gets help from human<br/>reviewers. To protect your privacy, we disconnect chats from your account<br/>before sending them to service providers. In alignment with our privacy<br/>principles<br/>&lt;<a href=\"https://c.gle/ANiao5oQPxDJ2fJqQO9CPe0dPV40JfLStUS4o3F9CWbbjSDnQFGIr7XdcUjJtfHSHl6QBbC5Ajxa9qgkbmHYYg2ViLgcAfZuRy8hTGUmx_pm1QX86evQueWcX3r9rPi_DaFV6vU7Cxqw8ujzxFaRQpRIq2Z8bw\">https://c.gle/ANiao5oQPxDJ2fJqQO9CPe0dPV40JfLStUS4o3F9CWbbjSDnQFGIr7XdcUjJtfHSHl6QBbC5Ajxa9qgkbmHYYg2ViLgcAfZuRy8hTGUmx_pm1QX86evQueWcX3r9rPi_DaFV6vU7Cxqw8ujzxFaRQpRIq2Z8bw</a>&gt;,<br/>we build technical data protections that safeguard and ensure the<br/>responsible use of data and provide you with tools to control your Gemini<br/>experience. You can learn more in the Gemini Apps Privacy Notice<br/>&lt;<a href=\"https://c.gle/ANiao5qLTEI8BJXsium__ZFFMwM8ELyHItR0J6RQOryCrE_VgG7xrittgZNS5Bn0MU4Rf2jrzdB1zuVEbCW5MnXwIVRjiyPFaAq3-fPY-NGFDlqDY6RcuOBsg_WaXqFuol7bWPyZLM24UJUB_qamF5sPAJ2ocg_jds4dLWru2TcG1JfZqQXOWP7qKhLmEsJhIFcj2PtP\">https://c.gle/ANiao5qLTEI8BJXsium__ZFFMwM8ELyHItR0J6RQOryCrE_VgG7xrittgZNS5Bn0MU4Rf2jrzdB1zuVEbCW5MnXwIVRjiyPFaAq3-fPY-NGFDlqDY6RcuOBsg_WaXqFuol7bWPyZLM24UJUB_qamF5sPAJ2ocg_jds4dLWru2TcG1JfZqQXOWP7qKhLmEsJhIFcj2PtP</a>&gt;<br/>and the Gemini Apps Privacy Hub<br/>&lt;<a href=\"https://c.gle/ANiao5rk2VzV0pkSpibiaLMz0-JRygaHFhXsoZSMDYnJcjeY6Dd-AQczEVPxha_y9XxPtDiTR9iuo00FbnpLObmseKGdE4cylrCszM_AWy4YBNMOHvplsxwWD3CjJpcL-vPUha0dvuJT1x5xcZAA1S5UbctpEN2gEdq_W4moFgdn6-1H4Gt6TjddOE6IEmP_qgIq\">https://c.gle/ANiao5rk2VzV0pkSpibiaLMz0-JRygaHFhXsoZSMDYnJcjeY6Dd-AQczEVPxha_y9XxPtDiTR9iuo00FbnpLObmseKGdE4cylrCszM_AWy4YBNMOHvplsxwWD3CjJpcL-vPUha0dvuJT1x5xcZAA1S5UbctpEN2gEdq_W4moFgdn6-1H4Gt6TjddOE6IEmP_qgIq</a>&gt;.<br/>Google&apos;s Generative AI Prohibited Use Policy<br/>&lt;<a href=\"https://c.gle/ANiao5pn4jNTB5hXPsZR1ZC4XOt-RWB18w6JtTLzVmAH4wHb9pL0yqVKnjFl4ZODUk-QMU1-DztBMfPOf0sRRp-H-eYwimvKzSeuRN5uHalZ0SPoXF7JAgHkZbAusn3IdgolWpQbFsZdQCElq6moxosjd7K7hDyKjTEv4ilO_Zi_m1_Z8Ss2cxA3FID-ZXfnEQbEyqzvdH4v\">https://c.gle/ANiao5pn4jNTB5hXPsZR1ZC4XOt-RWB18w6JtTLzVmAH4wHb9pL0yqVKnjFl4ZODUk-QMU1-DztBMfPOf0sRRp-H-eYwimvKzSeuRN5uHalZ0SPoXF7JAgHkZbAusn3IdgolWpQbFsZdQCElq6moxosjd7K7hDyKjTEv4ilO_Zi_m1_Z8Ss2cxA3FID-ZXfnEQbEyqzvdH4v</a>&gt;<br/>applies.<br/>Sincerely,<br/>The Gemini Team<br/>&copy; 2025 Google LLC<br/>1600 Amphitheatre Parkway,<br/>Mountain View, CA 94043<br/>You have received this mandatory service announcement to update you about<br/>important changes to Gemini.</p>",
+          "subject": "Fwd: Important updates in Gemini Apps",
+          "references": "<7f193f298d78e3f46c53c9813b9dc981d63cf191-20364530-111709449@google.com>",
+          "date": "2025-08-26T16:24:31.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "oswalswayam@gmail.com",
+                "name": ""
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><a href=\"mailto:oswalswayam@gmail.com\" class=\"mp_address_email\">oswalswayam@gmail.com</a></span>",
+            "text": "oswalswayam@gmail.com"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "swayamofoswal@gmail.com",
+                "name": "Swayam Oswal"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Swayam Oswal</span> &lt;<a href=\"mailto:swayamofoswal@gmail.com\" class=\"mp_address_email\">swayamofoswal@gmail.com</a>&gt;</span>",
+            "text": "\"Swayam Oswal\" <swayamofoswal@gmail.com>"
+          },
+          "messageId": "<CALhGdDzptNxVnjrgHxfu=ADqoGOyx0E_X90sXNvNfqyobNcppA@mail.gmail.com>",
+          "inReplyTo": "<7f193f298d78e3f46c53c9813b9dc981d63cf191-20364530-111709449@google.com>"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail - Merge": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Gmail Headers Here",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip IP Check": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Authentication-Results Header?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Format Individual Auth Outputs1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Set Headers": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Extract Received Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - No SPF Found": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Query IP API": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Authentication-Results Header?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - DMARC Header?": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Extract DMARC Header",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail - No DMARC Header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Format Output": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Set SPF Value": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Gmail Headers Here": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Set Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - No DMARC Header": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Gmail - Set DMARC Value": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Gmail - Original IP Found?": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Query IP Quality Score API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip IP Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Combined Auth Output1": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - DKIM Signature Found": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Gmail - Extract DMARC Header": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Set DMARC Value",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Received-SPF Header?": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Extract Received-SPF Header",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail - No SPF Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Determine Auth Values": {
+      "main": [
+        [
+          {
+            "node": "Format Combined Auth Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - DKIM-Signature Header?": {
+      "main": [
+        [
+          {
+            "node": "Gmail - DKIM Signature Found",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail - No DKIM Signature Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Received-SPF Headers1": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Set SPF Value",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Individual Auth Outputs1": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Format Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - No DKIM Signature Found": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Gmail - Extract Original From IP": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Original IP Found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Extract Received Headers": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Remove Extra Received Headers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Query IP Quality Score API": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Query IP API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Extract Received-SPF Header": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Received-SPF Headers1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Remove Extra Received Headers": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Extract Original From IP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Authentication-Results Header?": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Extract Authentication-Results Header",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gmail - Received-SPF Header?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail - DKIM-Signature Header?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gmail - DMARC Header?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail - Extract Authentication-Results Header": {
+      "main": [
+        [
+          {
+            "node": "Gmail - Determine Auth Values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call n8n Workflow Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6cbb423c-e218-411e-862a-cb637139a18a",
+  "meta": {
+    "instanceId": "fbe584eab735bc6a60964bfe9d9001d584b03e95eb82457fe4a1378f0775068c"
+  },
+  "id": "jWOsFcef8KHnaBQV",
+  "tags": []
+}
