@@ -19,7 +19,7 @@ You will need: Gmail (OAuth2 credentials for read-only header access)
    
 5. 🗂️Incoming emails will now be scanned and appended to your sheet.
 
-6.Output Format (Each processed email produces structured data):
+6. Output Format (Each processed email produces structured data):
 a.initialIP
 b.spf
 c.dkim
